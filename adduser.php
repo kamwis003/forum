@@ -1,36 +1,61 @@
-<HEAD>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-</HEAD>
-<BODY>
 <?php
-$user=$_POST['user']; // login z formularza
-$user = htmlentities ($user, ENT_QUOTES, "UTF-8");
-$pass=$_POST['pass']; // hasło z formularza
-$pass = htmlentities ($pass, ENT_QUOTES, "UTF-8"); 
-$repeatpass=$_POST['repeatpass'];
+header('Content-Type: text/html; charset=utf-8');
+
+$user        = $_POST['user'] ?? '';
+$pass        = $_POST['pass'] ?? '';
+$repeatpass  = $_POST['repeatpass'] ?? '';
+
+// filtrowanie podstawowe
+$user = htmlentities($user, ENT_QUOTES, "UTF-8");
+$pass = htmlentities($pass, ENT_QUOTES, "UTF-8");
 $repeatpass = htmlentities($repeatpass, ENT_QUOTES, "UTF-8");
-$link = new PDO("sqlsrv:server = tcp:forumewaldowe.database.windows.net,1433; Database = forumewaldowe", "htmlentities", "Ewald123#"); // połączenie z BD – wpisać swoje dane
-if(!$link) { echo"Błąd: ". mysqli_connect_errno()." ".mysqli_connect_error(); } // obsługa błędu połączenia z BD
-mysqli_query($link, "SET NAMES 'utf8'"); // ustawienie polskich znaków
-$result = mysqli_query($link, "SELECT * FROM users WHERE username='$user'"); // wiersza, w którym login=login z formularza
-$rekord = mysqli_fetch_array($result); // wiersza z BD, struktura zmiennej jak w BD
-if(!$rekord) //Jeśli brak, to nie ma użytkownika o podanym loginie
-{if($pass == $repeatpass)
-    {
-    $sql = mysqli_query($link,"INSERT INTO users (username,password) VALUES ('$user','$pass')");
-    mysqli_close($link); // zamknięcie połączenia z BD  
-header("Location: https://forumewaldowe.azurewebsites.net/login.php");
-    }
-    else{
-        mysqli_close($link);
-        echo "Hasla sie nie zgadzaja";
-    }
+
+// --- PDO CONNECTION ---
+$server   = "tcp:forumewaldowe.database.windows.net,1433";
+$db       = "forumewaldowe";
+$username = "htmlentities";
+$password = "Ewald123#";
+
+try {
+    $pdo = new PDO(
+        "sqlsrv:server=$server;Database=$db",
+        $username,
+        $password,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::SQLSRV_ATTR_ENCODING => PDO::SQLSRV_ENCODING_UTF8
+        ]
+    );
+} catch (PDOException $e) {
+    die("Błąd połączenia z bazą: " . $e->getMessage());
 }
-else
-{ 
-    mysqli_close($link);
-    echo "Uzytkownik istnieje";
+
+// --- SPRAWDZENIE CZY UŻYTKOWNIK ISTNIEJE ---
+$stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+$stmt->execute([$user]);
+$rekord = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$rekord) {
+
+    if ($pass === $repeatpass) {
+
+        // haszowanie hasła – ZALECANE!
+        $hashed = password_hash($pass, PASSWORD_DEFAULT);
+
+        $insert = $pdo->prepare(
+            "INSERT INTO users (username, password) VALUES (?, ?)"
+        );
+        $insert->execute([$user, $hashed]);
+
+        header("Location: https://forumewaldowe.azurewebsites.net/login.php");
+        exit;
+
+    } else {
+        echo "Hasła się nie zgadzają";
+    }
+
+} else {
+    echo "Użytkownik już istnieje";
 }
+
 ?>
-</BODY>
-</HTML>
