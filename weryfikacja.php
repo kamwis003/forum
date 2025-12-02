@@ -16,7 +16,7 @@ $user = htmlentities($user, ENT_QUOTES, "UTF-8");
 $pass = htmlentities($pass, ENT_QUOTES, "UTF-8");
 
 // --- PDO CONNECTION (Azure MySQL) ---
-$host = "forumewaldowe.mysql.database.azure.com";
+$host = "forumewaldowe.database.windows.net";
 $dbname   = "forumewaldowe";
 $username = "htmlentities";
 $password = "Ewald123#";
