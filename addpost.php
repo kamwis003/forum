@@ -37,7 +37,7 @@ if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 $file_name = basename($_FILES["fileToUpload"]["name"]);
 
 // --- PDO CONNECTION ---
-$host     = "forumewaldowe.mysql.database.azure.com";
+$host     = "tcp:forumewaldowe.database.windows.net,1433";
 $dbname   = "forumewaldowe";
 $username = "htmlentities";
 $password = "Ewald123#";
