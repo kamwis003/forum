@@ -24,9 +24,30 @@ Plik:<input type="file" name="fileToUpload" id="fileToUpload"><br>
 {echo "disabled";}?>>
 </form>
 <?php
-$connection = mysqli_connect("localhost", "root", "", "01000928_z7");
-$result = mysqli_query($connection, "Select * from threads Order by tid Desc") or die ("DB error: $dbname");
-while ($row = mysqli_fetch_array ($result))
-{
- echo "<a href=viewtopic.php?tid=$row[0]>$row[1]</a><br>";
+// --- PDO CONNECTION (Azure MySQL) ---
+$host     = "tcp:forumewaldowe.database.windows.net,1433";
+$dbname   = "forumewaldowe";
+$username = "htmlentities";
+$password = "Ewald123#";
+
+try {
+    $pdo = new PDO(
+        "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
+        $username,
+        $password,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]
+    );
+} catch (PDOException $e) {
+    die("Błąd połączenia: " . $e->getMessage());
 }
+
+// --- ODCZYT THREADS ---
+$stmt = $pdo->query("SELECT tid, tname FROM threads ORDER BY tid DESC");
+
+while ($row = $stmt->fetch()) {
+    echo "<a href='viewtopic.php?tid={$row['tid']}'>{$row['tname']}</a><br>";
+}
+?>
