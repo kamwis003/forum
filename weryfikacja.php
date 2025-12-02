@@ -17,7 +17,7 @@ if(!$rekord) //Jeśli brak, to nie ma użytkownika o podanym loginie
 {
 mysqli_close($link); // zamknięcie połączenia z BD
 echo "Brak użytkownika o takim loginie !"; // UWAGA nie wyświetlamy takich podpowiedzi dla hakerów
-header("Location: http://index.kacwac000.online/z7/login.php");
+header("Location: https://forumewaldowe.azurewebsites.net/login.php");
 }
 else
 { // jeśli $rekord istnieje
@@ -28,13 +28,13 @@ session_start();
 $_SESSION ['loggedin'] = true;
 $_SESSION ['user_login'] = $user;
 $_SESSION['user_id'] = $rekord['id'];
-header("Location: http://index.kacwac000.online/z7/geo.php");
+header("Location: https://forumewaldowe.azurewebsites.net/geo.php");
 }
 else
 {
 mysqli_close($link);
 echo "Błąd w haśle !"; // UWAGA nie wyświetlamy takich podpowiedzi dla hakerów
-header("Location: http://index.kacwac000.online/z7/login.php");
+header("Location: https://forumewaldowe.azurewebsites.net/login.php");
 }
 }
 ?>
