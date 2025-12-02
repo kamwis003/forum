@@ -19,7 +19,7 @@
         session_start();
        session_unset();
        header("HTTP/1.1 303 See Other");
-header("Location: http://index.kacwac000.online/z7/login.php");
+header("Location: https://forumewaldowe.azurewebsites.net/login.php");
 
 ?>
     
