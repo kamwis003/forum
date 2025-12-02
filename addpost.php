@@ -26,7 +26,7 @@ $type = "other";
 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file))
 { echo htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " uploaded."; }
 else { echo "Error uploading file."; }
-$connection = mysqli_connect("localhost", "root", "", "01000928_z7");
+$connection = mysqli_connect("forumewaldowe.mysql.database.azure.com", "htmlentities", "Ewald123#", "forumewaldowe");
 if (!$connection)
 {
 echo " MySQL Connection error." . PHP_EOL;
