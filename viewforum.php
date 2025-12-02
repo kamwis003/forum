@@ -25,7 +25,7 @@ Plik:<input type="file" name="fileToUpload" id="fileToUpload"><br>
 </form>
 <?php
 // --- PDO CONNECTION (Azure MySQL) ---
-$host     = "tcp:forumewaldowe.database.windows.net,1433";
+$host = "forumewaldowe.mysql.database.azure.com";
 $dbname   = "forumewaldowe";
 $username = "htmlentities";
 $password = "Ewald123#";
