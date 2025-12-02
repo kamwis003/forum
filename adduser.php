@@ -9,7 +9,7 @@ $pass=$_POST['pass']; // hasło z formularza
 $pass = htmlentities ($pass, ENT_QUOTES, "UTF-8"); 
 $repeatpass=$_POST['repeatpass'];
 $repeatpass = htmlentities($repeatpass, ENT_QUOTES, "UTF-8");
-$link = mysqli_connect("forumewaldowe.mysql.database.azure.com", "htmlentities", "Ewald123#", "forumewaldowe"); // połączenie z BD – wpisać swoje dane
+$link = mysqli_connect("forumewaldowe.database.windows.net", "htmlentities", "Ewald123#", "forumewaldowe"); // połączenie z BD – wpisać swoje dane
 if(!$link) { echo"Błąd: ". mysqli_connect_errno()." ".mysqli_connect_error(); } // obsługa błędu połączenia z BD
 mysqli_query($link, "SET NAMES 'utf8'"); // ustawienie polskich znaków
 $result = mysqli_query($link, "SELECT * FROM users WHERE username='$user'"); // wiersza, w którym login=login z formularza
