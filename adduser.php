@@ -19,7 +19,7 @@ if(!$rekord) //Jeśli brak, to nie ma użytkownika o podanym loginie
     {
     $sql = mysqli_query($link,"INSERT INTO users (username,password) VALUES ('$user','$pass')");
     mysqli_close($link); // zamknięcie połączenia z BD  
-header("Location: http://index.kacwac000.online/z7/login.php");
+header("Location: https://forumewaldowe.azurewebsites.net/login.php");
     }
     else{
         mysqli_close($link);
