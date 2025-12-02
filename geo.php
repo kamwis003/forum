@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 // --- DANE DO PDO (Azure MySQL) ---
-$host = "forumewaldowe.mysql.database.azure.com";   // <-- Twój host z Azure
+$host = "forumewaldowe.database.windows.net";   // <-- Twój host z Azure
 $dbname   = "forumewaldowe";                            // <-- baza
 $username = "htmlentities";                             // <-- login
 $password = "Ewald123#";                                // <-- hasło
