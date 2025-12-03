@@ -1,29 +1,11 @@
-<!DOCTYPE html>
-<html>
+<?php
+// logout.php
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Wącior</title>
-</head>
+session_start();    // rozpoczęcie sesji
+session_unset();    // usunięcie wszystkich zmiennych sesyjnych
+session_destroy();  // zniszczenie sesji
 
-<body class="secondary-template">
-
-    
-
-    <main>
-        <?php
-        session_start();
-       session_unset();
-       header("HTTP/1.1 303 See Other");
+// Przekierowanie do strony logowania
 header("Location: https://forumewaldowe.azurewebsites.net/login.php");
-
+exit; // zatrzymanie dalszego wykonywania skryptu
 ?>
-    
-    </main>
-</body>
-
-</html>
