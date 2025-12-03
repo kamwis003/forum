@@ -2,6 +2,10 @@
 session_start();
 header("Content-Type: text/html; charset=utf-8");
 
+$user = $_COOKIE['user_login'] ?? null;
+if (!$user) {
+    die("Brak zalogowanego użytkownika.");
+}
 // Pobranie danych
 $tname   = $_POST['tname'] ?? '';
 $message = $_POST['message'] ?? '';
@@ -63,13 +67,6 @@ try {
 } catch (PDOException $e) {
     die("Błąd połączenia: " . $e->getMessage());
 }
-
-// --- SPRAWDZENIE SESJI ---
-if (!isset($_SESSION['user_login'])) {
-    die("Brak zalogowanego użytkownika.");
-}
-
-$user = $_SESSION['user_login'];
 
 // Pobranie ID użytkownika
 $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
