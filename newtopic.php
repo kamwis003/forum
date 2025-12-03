@@ -40,8 +40,8 @@ if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 $file_name = basename($_FILES["fileToUpload"]["name"]);
 
 // --- PDO CONNECTION (Azure MySQL) ---
-$host = "forumewaldowe.database.windows.net";
-$dbname   = "forumewaldowe";
+$host = "forumchmury.mysql.database.azure.com"; // tak jak w viewforum.php
+$dbname = "forum";                               // tak jak w viewforum.php
 $username = "htmlentities";
 $password = "Ewald123#";
 
