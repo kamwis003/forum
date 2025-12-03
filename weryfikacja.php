@@ -1,5 +1,6 @@
 <?php
-
+// Ustaw trwały katalog sesji
+session_save_path(__DIR__ . '/sessions');
 session_start();
 $_SESSION['loggedin']  = true;
 $_SESSION['user_login'] = $rekord['username'];
