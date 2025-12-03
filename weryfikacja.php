@@ -1,14 +1,8 @@
 <?php
-// Ustaw trwały katalog sesji
-session_save_path(__DIR__ . '/sessions');
-session_start();
-$_SESSION['loggedin']  = true;
-$_SESSION['user_login'] = $rekord['username'];
-$_SESSION['user_id']    = $rekord['id'];
-
-echo 'Zalogowano jako: ' . $_SESSION['user_login'];
-echo '<br><a href="geo.php">Przejdź do geo.php</a>';
-
+// Włączenie błędów (tylko do testów)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // Pobranie danych z formularza
 $user = $_POST['user'] ?? '';
@@ -17,16 +11,13 @@ $pass = $_POST['pass'] ?? '';
 $user = htmlentities($user, ENT_QUOTES, "UTF-8");
 $pass = htmlentities($pass, ENT_QUOTES, "UTF-8");
 
-// --- KONFIGURACJA BAZY DANYCH ---
+// --- PDO CONNECTION (Azure MySQL) ---
 $host = "forumchmury.mysql.database.azure.com";
 $dbname = "forum";
 $username = "htmlentities";
 $password = "Ewald123#";
-
-// Ścieżka do certyfikatu root CA
 $ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
 
-// --- POŁĄCZENIE PDO ---
 try {
     $pdo = new PDO(
         "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
@@ -43,31 +34,20 @@ try {
     die("Błąd połączenia z bazą: " . $e->getMessage());
 }
 
-// --- SPRAWDZENIE UŻYTKOWNIKA ---
+// --- Sprawdzenie użytkownika ---
 $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
 $stmt->execute([$user]);
 $rekord = $stmt->fetch();
 
-if (!$rekord) {
-    // Użytkownik nie istnieje
-    $_SESSION['login_error'] = "Nieprawidłowy login lub hasło.";
+if (!$rekord || !password_verify($pass, $rekord['password'])) {
+    // Błędny login lub hasło
     header("Location: login.php");
     exit;
 }
 
-// --- SPRAWDZENIE HASŁA ---
-if (password_verify($pass, $rekord['password'])) {
-    // Poprawne logowanie
-    $_SESSION['loggedin']  = true;
-    $_SESSION['user_login'] = $rekord['username'];
-    $_SESSION['user_id']    = $rekord['id'];
+// --- Poprawne logowanie ---
+// Ustawienie cookie na 1 godzinę, dostępne w całym serwisie
+setcookie('user_login', $rekord['username'], time() + 3600, "/");
 
-    header("Location: geo.php");
-    exit;
-} else {
-    // Błędne hasło
-    $_SESSION['login_error'] = "Nieprawidłowy login lub hasło.";
-    header("Location: login.php");
-    exit;
-}
-?>
+header("Location: geo.php");
+exit;
