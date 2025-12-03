@@ -1,10 +1,13 @@
 <?php
-session_start();
 
-// Włączenie wyświetlania błędów (tylko do testów, w produkcji wyłącz)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+session_start();
+$_SESSION['loggedin']  = true;
+$_SESSION['user_login'] = $rekord['username'];
+$_SESSION['user_id']    = $rekord['id'];
+
+echo 'Zalogowano jako: ' . $_SESSION['user_login'];
+echo '<br><a href="geo.php">Przejdź do geo.php</a>';
+
 
 // Pobranie danych z formularza
 $user = $_POST['user'] ?? '';
