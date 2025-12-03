@@ -72,4 +72,4 @@ $tabela = $pdo->query("SELECT * FROM goscieportalu ORDER BY datetime DESC");
 </table>
 
 <br>
-<a href="viewforum.php">Do portalu</a>
+<a href="/viewforum.php">Do portalu</a>
