@@ -16,8 +16,8 @@ $user = htmlentities($user, ENT_QUOTES, "UTF-8");
 $pass = htmlentities($pass, ENT_QUOTES, "UTF-8");
 
 // --- PDO CONNECTION (Azure MySQL) ---
-$host = "forumewaldowe.database.windows.net";
-$dbname   = "forumewaldowe";
+$host = "forumchmury.mysql.database.azure.com";
+$dbname   = "forum";
 $username = "htmlentities";
 $password = "Ewald123#";
 
@@ -42,7 +42,7 @@ $rekord = $stmt->fetch();
 
 if (!$rekord) {
     // Uzytkownik nie istnieje
-    header("Location: https://forumewaldowe.azurewebsites.net/login.php");
+    header("Location: https://forumchmury.mysql.database.azure.com/login.php");
     exit;
 }
 
@@ -53,12 +53,12 @@ if (password_verify($pass, $rekord['password'])) {
     $_SESSION['user_login'] = $rekord['username'];
     $_SESSION['user_id']    = $rekord['id'];
 
-    header("Location: https://forumewaldowe.azurewebsites.net/geo.php");
+    header("Location: https://forumchmury.mysql.database.azure.com/geo.php");
     exit;
 
 } else {
     // Błędne hasło
-    header("Location: https://forumewaldowe.azurewebsites.net/login.php");
+    header("Location: https://forumchmury.mysql.database.azure.com/login.php");
     exit;
 }
 ?>
