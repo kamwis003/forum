@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);  /* Ta linia musi byc pierwsza */ 
+session_save_path(__DIR__ . '/sessions');
 session_start();
 $login = $_SESSION['user_login'];
 ?>
