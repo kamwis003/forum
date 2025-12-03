@@ -21,7 +21,7 @@ $ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
 
 try {
     $pdo = new PDO(
-        "sqlsrv:server=$server;Database=$db",
+        "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
         $username,
         $password,
         [
