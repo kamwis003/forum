@@ -5,18 +5,15 @@ $user        = $_POST['user'] ?? '';
 $pass        = $_POST['pass'] ?? '';
 $repeatpass  = $_POST['repeatpass'] ?? '';
 
-// filtrowanie podstawowe
 $user = htmlentities($user, ENT_QUOTES, "UTF-8");
 $pass = htmlentities($pass, ENT_QUOTES, "UTF-8");
 $repeatpass = htmlentities($repeatpass, ENT_QUOTES, "UTF-8");
 
 // --- PDO CONNECTION ---
 $host = "forumchmury.mysql.database.azure.com";
-$dbname   = "forum";
+$dbname = "forum";
 $username = "htmlentities";
 $password = "Ewald123#";
-
-// Ścieżka do certyfikatu root CA
 $ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
 
 try {
@@ -25,9 +22,9 @@ try {
         $username,
         $password,
         [
-            PDO::ATTR_ERRMODE                 => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE      => PDO::FETCH_ASSOC,
-            PDO::MYSQL_ATTR_SSL_CA            => $ca_cert_path,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::MYSQL_ATTR_SSL_CA => $ca_cert_path,
             PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
         ]
     );
@@ -38,29 +35,26 @@ try {
 // --- SPRAWDZENIE CZY UŻYTKOWNIK ISTNIEJE ---
 $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
 $stmt->execute([$user]);
-$rekord = $stmt->fetch(PDO::FETCH_ASSOC);
+$rekord = $stmt->fetch();
 
-if (!$rekord) {
-
-    if ($pass === $repeatpass) {
-
-        // haszowanie hasła – ZALECANE!
-        $hashed = password_hash($pass, PASSWORD_DEFAULT);
-
-        $insert = $pdo->prepare(
-            "INSERT INTO users (username, password) VALUES (?, ?)"
-        );
-        $insert->execute([$user, $hashed]);
-
-        header("Location: https://forumchmury.mysql.database.azure.com/login.php");
-        exit;
-
-    } else {
-        echo "Hasła się nie zgadzają";
-    }
-
-} else {
+if ($rekord) {
     echo "Użytkownik już istnieje";
+    exit;
 }
 
-?>
+if ($pass !== $repeatpass) {
+    echo "Hasła się nie zgadzają";
+    exit;
+}
+
+// --- Dodanie użytkownika ---
+$hashed = password_hash($pass, PASSWORD_DEFAULT);
+$insert = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+$insert->execute([$user, $hashed]);
+
+// --- Ustawienie cookie, żeby użytkownik był od razu zalogowany ---
+setcookie('user_login', $user, time() + 3600, "/");
+
+// --- Przekierowanie do geo.php lub viewforum.php ---
+header("Location: geo.php");
+exit;
