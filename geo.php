@@ -1,79 +1,66 @@
-<?php declare(strict_types=1);
+<?php
+// Pobranie loginu z cookie
+$login = $_COOKIE['user_login'] ?? 'Gość';
+?>
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Geo</title>
+</head>
+<body>
 
-session_save_path(__DIR__ . '/sessions');
-session_start();
-echo 'Sesja w geo.php: ' . ($_SESSION['user_login'] ?? 'Gość');
+<h2>Sesja w geo.php: <?= htmlspecialchars($login) ?></h2>
 
-// --- DANE DO PDO (Azure MySQL) ---
+<table border="1" cellspacing="0" cellpadding="10">
+<tr>
+    <th>ID</th>
+    <th>Adres IP</th>
+    <th>Czas</th>
+    <th>Lokalizacja</th>
+</tr>
+
+<?php
+// --- PDO CONNECTION (tak samo jak w weryfikacja.php) ---
 $host = "forumchmury.mysql.database.azure.com";
-$dbname   = "forum";                           // <-- baza
-$username = "htmlentities";                             // <-- login
-$password = "Ewald123#";                                // <-- hasło
-
-// Ścieżka do certyfikatu root CA
+$dbname = "forum";
+$username = "htmlentities";
+$password = "Ewald123#";
 $ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
 
-try {
-    $pdo = new PDO(
-        "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
-        $username,
-        $password,
-        [
-            PDO::ATTR_ERRMODE                 => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE      => PDO::FETCH_ASSOC,
-            PDO::MYSQL_ATTR_SSL_CA            => $ca_cert_path,
-            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
-        ]
-    );
-} catch (PDOException $e) {
-    die("Błąd połączenia: " . $e->getMessage());
-}
+$pdo = new PDO(
+    "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
+    $username,
+    $password,
+    [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::MYSQL_ATTR_SSL_CA => $ca_cert_path,
+        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
+    ]
+);
 
-// --- POBRANIE IP UŻYTKOWNIKA ---
+// --- Pobranie IP użytkownika ---
 $ipaddress = $_SERVER["REMOTE_ADDR"];
-
-// Funkcja pobierająca geo-info
-function ip_details(string $ip) {
-    $json = @file_get_contents("http://ipinfo.io/{$ip}/geo");
-    return $json ? json_decode($json) : null;
-}
-
-$details = ip_details($ipaddress);
-$ipgoscia = $details->ip ?? $ipaddress;
-
-// --- ZAPIS IP DO BAZY ---
 $stmt = $pdo->prepare("INSERT INTO goscieportalu (ipaddress) VALUES (?)");
-$stmt->execute([$ipgoscia]);
+$stmt->execute([$ipaddress]);
 
-// --- POBRANIE LISTY WSZYSTKICH GOŚCI ---
+// --- Wyświetlenie wszystkich gości ---
 $tabela = $pdo->query("SELECT * FROM goscieportalu ORDER BY datetime DESC");
-
+foreach ($tabela as $row):
+    $linki = "https://www.google.pl/maps/place/" . $row['ipaddress'];
 ?>
-<table border="1" cellspacing="0" cellpadding="10">
-    <tr>
-        <th>ID</th>
-        <th>Adres IP</th>
-        <th>Czas</th>
-        <th>Lokalizacja</th>
-    </tr>
-
-<?php foreach ($tabela as $row): ?>
-
-    <?php
-        // indywidualny link do lokalizacji
-        $linki = "https://www.google.pl/maps/place/" . $row['ipaddress'];
-    ?>
-
-    <tr>
-        <td><?= htmlspecialchars($row['id']) ?></td>
-        <td><?= htmlspecialchars($row['ipaddress']) ?></td>
-        <td><?= htmlspecialchars($row['datetime']) ?></td>
-        <td><a href="<?= $linki ?>" target="_blank">Link</a></td>
-    </tr>
-
+<tr>
+    <td><?= htmlspecialchars($row['id']) ?></td>
+    <td><?= htmlspecialchars($row['ipaddress']) ?></td>
+    <td><?= htmlspecialchars($row['datetime']) ?></td>
+    <td><a href="<?= $linki ?>" target="_blank">Link</a></td>
+</tr>
 <?php endforeach; ?>
-
 </table>
 
 <br>
-<a href="/viewforum.php">Do portalu</a>
+<a href="viewforum.php">Do portalu</a>
+
+</body>
+</html>
