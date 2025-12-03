@@ -6,6 +6,9 @@ $dbname   = "forum";                           // <-- baza
 $username = "htmlentities";                             // <-- login
 $password = "Ewald123#";                                // <-- hasło
 
+// Ścieżka do certyfikatu root CA
+$ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
+
 try {
     $pdo = new PDO(
         "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
