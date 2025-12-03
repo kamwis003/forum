@@ -25,8 +25,10 @@ try {
         $username,
         $password,
         [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::SQLSRV_ATTR_ENCODING => PDO::SQLSRV_ENCODING_UTF8
+            PDO::ATTR_ERRMODE                 => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE      => PDO::FETCH_ASSOC,
+            PDO::MYSQL_ATTR_SSL_CA            => $ca_cert_path,
+            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => true
         ]
     );
 } catch (PDOException $e) {
