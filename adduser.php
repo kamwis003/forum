@@ -11,8 +11,8 @@ $pass = htmlentities($pass, ENT_QUOTES, "UTF-8");
 $repeatpass = htmlentities($repeatpass, ENT_QUOTES, "UTF-8");
 
 // --- PDO CONNECTION ---
-$server   = "tcp:forumewaldowe.database.windows.net,1433";
-$db       = "forumewaldowe";
+$host = "forumchmury.mysql.database.azure.com";
+$dbname   = "forum";
 $username = "htmlentities";
 $password = "Ewald123#";
 
