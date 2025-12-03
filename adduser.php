@@ -16,6 +16,9 @@ $dbname   = "forum";
 $username = "htmlentities";
 $password = "Ewald123#";
 
+// Ścieżka do certyfikatu root CA
+$ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
+
 try {
     $pdo = new PDO(
         "sqlsrv:server=$server;Database=$db",
