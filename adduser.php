@@ -52,7 +52,7 @@ if (!$rekord) {
         );
         $insert->execute([$user, $hashed]);
 
-        header("Location: https://forumewaldowe.azurewebsites.net/login.php");
+        header("Location: https://forumchmury.mysql.database.azure.com/login.php");
         exit;
 
     } else {
