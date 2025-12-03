@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+session_save_path(__DIR__ . '/sessions');
+session_start();
+echo 'Sesja w geo.php: ' . ($_SESSION['user_login'] ?? 'Gość');
+
 // --- DANE DO PDO (Azure MySQL) ---
 $host = "forumchmury.mysql.database.azure.com";
 $dbname   = "forum";                           // <-- baza
