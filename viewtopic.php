@@ -8,8 +8,8 @@ if (!$tid) {
 }
 
 // --- PDO CONNECTION (Azure MySQL) ---
-$host = "forumewaldowe.database.windows.net";
-$dbname   = "forumewaldowe";
+$host = "forumchmury.mysql.database.azure.com";
+$dbname = "forum";
 $username = "htmlentities";
 $password = "Ewald123#";
 
