@@ -45,7 +45,7 @@ $stmt->execute([$ipadress]);
 $tabela = $pdo->query("SELECT * FROM goscieportalu ORDER BY datetime DESC");
 
 // --- Dynamiczny link do viewforum.php ---
-$viewforum_path = dirname($_SERVER['PHP_SELF']) . '/viewforum.php';
+$viewforum_path = 'viewforum.php';
 ?>
 <!DOCTYPE html>
 <html lang="pl">
