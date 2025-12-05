@@ -37,9 +37,9 @@ try {
 }
 
 // --- Pobranie IP użytkownika ---
-$ipaddress = $_SERVER["REMOTE_ADDR"];
-$stmt = $pdo->prepare("INSERT INTO goscieportalu (ipaddress) VALUES (?)");
-$stmt->execute([$ipaddress]);
+$ipadress = $_SERVER["REMOTE_ADDR"];
+$stmt = $pdo->prepare("INSERT INTO goscieportalu (ipadress) VALUES (?)");
+$stmt->execute([$ipadress]);
 
 // --- Pobranie wszystkich gości ---
 $tabela = $pdo->query("SELECT * FROM goscieportalu ORDER BY datetime DESC");
@@ -66,11 +66,11 @@ $viewforum_path = dirname($_SERVER['PHP_SELF']) . '/viewforum.php';
 </tr>
 
 <?php foreach ($tabela as $row): 
-    $linki = "https://www.google.pl/maps/place/" . $row['ipaddress'];
+    $linki = "https://www.google.pl/maps/place/" . $row['ipadress'];
 ?>
 <tr>
     <td><?= htmlspecialchars($row['id']) ?></td>
-    <td><?= htmlspecialchars($row['ipaddress']) ?></td>
+    <td><?= htmlspecialchars($row['ipadress']) ?></td>
     <td><?= htmlspecialchars($row['datetime']) ?></td>
     <td><a href="<?= $linki ?>" target="_blank">Link</a></td>
 </tr>
