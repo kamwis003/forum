@@ -1,10 +1,37 @@
 <?php
 // Pobranie loginu z cookie
 $login = $_COOKIE['user_login'] ?? 'Gość';
-echo "<pre>";
-echo "Aktualny katalog: " . __DIR__ . "\n";
-echo "Plik viewforum.php istnieje: " . (file_exists(__DIR__ . '/viewforum.php') ? "TAK" : "NIE");
-echo "</pre>";
+
+// --- PDO CONNECTION (tak samo jak w weryfikacja.php) ---
+$host = "forumchmury.mysql.database.azure.com";
+$dbname = "forum";
+$username = "htmlentities";
+$password = "Ewald123#";
+$ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
+
+try {
+    $pdo = new PDO(
+        "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
+        $username,
+        $password,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::MYSQL_ATTR_SSL_CA => $ca_cert_path,
+            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
+        ]
+    );
+} catch (PDOException $e) {
+    die("Błąd połączenia z bazą: " . $e->getMessage());
+}
+
+// --- Pobranie IP użytkownika ---
+$ipaddress = $_SERVER["REMOTE_ADDR"];
+$stmt = $pdo->prepare("INSERT INTO goscieportalu (ipaddress) VALUES (?)");
+$stmt->execute([$ipaddress]);
+
+// --- Pobranie wszystkich gości ---
+$tabela = $pdo->query("SELECT * FROM goscieportalu ORDER BY datetime DESC");
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -24,34 +51,7 @@ echo "</pre>";
     <th>Lokalizacja</th>
 </tr>
 
-<?php
-// --- PDO CONNECTION (tak samo jak w weryfikacja.php) ---
-$host = "forumchmury.mysql.database.azure.com";
-$dbname = "forum";
-$username = "htmlentities";
-$password = "Ewald123#";
-$ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
-
-$pdo = new PDO(
-    "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
-    $username,
-    $password,
-    [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::MYSQL_ATTR_SSL_CA => $ca_cert_path,
-        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
-    ]
-);
-
-// --- Pobranie IP użytkownika ---
-$ipaddress = $_SERVER["REMOTE_ADDR"];
-$stmt = $pdo->prepare("INSERT INTO goscieportalu (ipaddress) VALUES (?)");
-$stmt->execute([$ipaddress]);
-
-// --- Wyświetlenie wszystkich gości ---
-$tabela = $pdo->query("SELECT * FROM goscieportalu ORDER BY datetime DESC");
-foreach ($tabela as $row):
+<?php foreach ($tabela as $row): 
     $linki = "https://www.google.pl/maps/place/" . $row['ipaddress'];
 ?>
 <tr>
@@ -64,7 +64,14 @@ foreach ($tabela as $row):
 </table>
 
 <br>
-<a href="viewforum.php">Do portalu</a>
+<p>Za chwilę zostaniesz przeniesiony do portalu...</p>
+
+<script>
+    // Automatyczne przekierowanie po 3 sekundach
+    setTimeout(() => {
+        window.location.href = "viewforum.php";
+    }, 3000);
+</script>
 
 </body>
 </html>
