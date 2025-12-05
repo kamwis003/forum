@@ -1,6 +1,10 @@
 <?php
 // Pobranie loginu z cookie
 $login = $_COOKIE['user_login'] ?? 'Gość';
+echo "<pre>";
+echo "Aktualny katalog: " . __DIR__ . "\n";
+echo "Plik viewforum.php istnieje: " . (file_exists(__DIR__ . '/viewforum.php') ? "TAK" : "NIE");
+echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="pl">
