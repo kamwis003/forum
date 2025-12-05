@@ -1,4 +1,9 @@
 <?php
+// --- Włącz wyświetlanie błędów dla debugowania ---
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Pobranie loginu z cookie
 $login = $_COOKIE['user_login'] ?? 'Gość';
 
@@ -10,16 +15,22 @@ $password = "Ewald123#";
 $ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
 
 try {
+    $pdo_options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ];
+
+    // Sprawdź, czy plik certyfikatu istnieje
+    if (file_exists($ca_cert_path)) {
+        $pdo_options[PDO::MYSQL_ATTR_SSL_CA] = $ca_cert_path;
+        $pdo_options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+    }
+
     $pdo = new PDO(
         "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
         $username,
         $password,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::MYSQL_ATTR_SSL_CA => $ca_cert_path,
-            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
-        ]
+        $pdo_options
     );
 } catch (PDOException $e) {
     die("Błąd połączenia z bazą: " . $e->getMessage());
