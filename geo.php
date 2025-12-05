@@ -2,7 +2,7 @@
 // Pobranie loginu z cookie
 $login = $_COOKIE['user_login'] ?? 'Gość';
 
-// --- PDO CONNECTION (tak samo jak w weryfikacja.php) ---
+// --- PDO CONNECTION ---
 $host = "forumchmury.mysql.database.azure.com";
 $dbname = "forum";
 $username = "htmlentities";
@@ -32,6 +32,9 @@ $stmt->execute([$ipaddress]);
 
 // --- Pobranie wszystkich gości ---
 $tabela = $pdo->query("SELECT * FROM goscieportalu ORDER BY datetime DESC");
+
+// --- Dynamiczny link do viewforum.php ---
+$viewforum_path = dirname($_SERVER['PHP_SELF']) . '/viewforum.php';
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -69,7 +72,7 @@ $tabela = $pdo->query("SELECT * FROM goscieportalu ORDER BY datetime DESC");
 <script>
     // Automatyczne przekierowanie po 3 sekundach
     setTimeout(() => {
-        window.location.href = "viewforum.php";
+        window.location.href = "<?= $viewforum_path ?>";
     }, 3000);
 </script>
 
