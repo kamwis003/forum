@@ -49,7 +49,7 @@ try {
 
 // --- Odczyt threads ---
 $stmt = $pdo->query("SELECT tid, tname FROM threads ORDER BY tid DESC");
-
+var_dump($stmt->rowCount());
 while ($row = $stmt->fetch()) {
     echo "<a href='viewtopic.php?tid=" . htmlspecialchars($row['tid']) . "'>" 
          . htmlspecialchars($row['tname']) . "</a><br>";
