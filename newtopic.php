@@ -1,5 +1,3 @@
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
 <?php
 session_start();
 header("Content-Type: text/html; charset=utf-8");
