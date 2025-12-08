@@ -50,7 +50,7 @@ $username = "htmlentities";
 $password = "Ewald123#";
 
 // Ścieżka do certyfikatu root CA
-$ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
+//$ca_cert_path = __DIR__ . '/certs/DigiCertGlobalRootCA.crt.pem';
 
 try {
     $pdo = new PDO(
@@ -60,7 +60,7 @@ try {
         [
             PDO::ATTR_ERRMODE                 => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE      => PDO::FETCH_ASSOC,
-            PDO::MYSQL_ATTR_SSL_CA            => $ca_cert_path,
+            //PDO::MYSQL_ATTR_SSL_CA            => $ca_cert_path,
             PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
         ]
     );
