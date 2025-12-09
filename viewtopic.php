@@ -58,7 +58,7 @@ Dodaj posta<br>
     <input type="hidden" name="tid" value="<?= htmlspecialchars($tid) ?>">
 
     <input type="submit" value="Wyślij"
-        <?php if (!isset($_SESSION['loggedin'])) echo "disabled"; ?>>
+        <?php if (!isset($_COOKIE['user_login'])) echo "disabled"; ?>>
 </form>
 
 <br><br>
