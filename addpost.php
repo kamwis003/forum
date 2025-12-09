@@ -28,7 +28,7 @@ switch ($ext) {
 
 // upload
 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-    echo htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " uploaded.";
+    //echo htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " uploaded.";
 } else {
     echo "Error uploading file.";
 }
