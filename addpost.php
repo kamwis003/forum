@@ -28,9 +28,9 @@ switch ($ext) {
 
 // upload
 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-    //echo htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " uploaded.";
+    //echo htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " uploaded.";    nie może nic się wyświetlać na echo bo inaczej azure zablokuje przekierowanie
 } else {
-    echo "Error uploading file.";
+    //echo "Error uploading file.";
 }
 
 // Nazwa pliku (do bazy)
@@ -95,6 +95,6 @@ $stmt->execute([
 
 // przekierowanie
 $domain = $_SERVER['HTTP_HOST'];
-header("Location: https://$domain/viewtopic.php?tid=$tid"); //reszta działa, ale nie przekierowuje, możliwe że przez $tid w linku
+header("Location: https://$domain/viewtopic.php?tid=$tid");
 exit;
 ?>
