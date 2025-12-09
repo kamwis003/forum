@@ -94,6 +94,6 @@ $stmt->execute([
 ]);
 
 // przekierowanie
-header("Location: viewtopic.php?tid=" . $tid);
+header("Location: viewtopic.php?tid=" . $tid); //wszystko już działa, ale nie przekierowuje, możliwe że przez $tid w linku
 exit;
 ?>
