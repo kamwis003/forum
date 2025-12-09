@@ -62,7 +62,7 @@ try {
 }
 
 // --- SPRAWDZENIE ZALOGOWANEGO UŻYTKOWNIKA ---
-if (!isset($_SESSION['user_login'])) {
+if (!isset($_COOKIE['user_login'])) {
     die("Brak zalogowanego użytkownika.");
 }
 
