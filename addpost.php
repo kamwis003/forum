@@ -94,6 +94,7 @@ $stmt->execute([
 ]);
 
 // przekierowanie
-header("Location: viewtopic.php?tid=" . $tid); //reszta działa, ale nie przekierowuje, możliwe że przez $tid w linku
+$domain = $_SERVER['HTTP_HOST'];
+header("Location: https://$domain/viewtopic.php?tid=$tid"); //reszta działa, ale nie przekierowuje, możliwe że przez $tid w linku
 exit;
 ?>
