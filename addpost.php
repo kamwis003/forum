@@ -66,7 +66,7 @@ if (!isset($_COOKIE['user_login'])) {
     die("Brak zalogowanego użytkownika.");
 }
 
-$user = $_SESSION['user_login'];
+$user = $_COOKIE['user_login'];
 
 // pobranie ID użytkownika
 $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
