@@ -87,13 +87,13 @@ $stmt = $pdo->prepare("
 
 $stmt->execute([
     $tid,
-    $user_id,
+    $user_id, //nie pojawia się messageid przy wiadomościach, gdzieś jest coś z tym popsute
     $message,
     $file_name,
     $type
 ]);
 
 // przekierowanie
-header("Location: viewtopic.php?tid=" . $tid); //wszystko już działa, ale nie przekierowuje, możliwe że przez $tid w linku
+header("Location: viewtopic.php?tid=" . $tid); //reszta działa, ale nie przekierowuje, możliwe że przez $tid w linku
 exit;
 ?>
