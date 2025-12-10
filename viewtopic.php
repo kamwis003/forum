@@ -87,7 +87,9 @@ while ($row = $stmt->fetch()) {
     $username = $user['username'] ?? '???';
 
     // filtrowanie przekleństw
-    $message = preg_replace("/\bcholera\b/i", "co przeklinasz?", $row['message']);
+    require_once __DIR__ . '/helpers.php';
+    $message = filterMessage($row['message']);
+
 
     $filename = $row['file'];
     $datetime = $row['datetime'];
