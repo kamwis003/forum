@@ -67,9 +67,9 @@ if (empty($threads)) {
     echo "<p>Brak tematów w bazie.</p>";
 } else {
     foreach ($threads as $row) {
-        $tid = htmlspecialchars($row['tid']);
+        $tid = htmlspecialchars((string)$row['tid']); // rzutowanie na string
         $tname = htmlspecialchars($row['tname']);
-        if (strlen($tname) === 0) $tname = '[Bez nazwy]';
+        if ($tname === '') $tname = '[Bez nazwy]';
 
         echo '<div><a href="viewtopic.php?tid=' . $tid . '">' . $tname . '</a></div>';
     }
