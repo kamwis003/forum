@@ -1,11 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
-// --- START PHP ---
+// --- WŁĄCZENIE WYŚWIETLANIA BŁĘDÓW I OUTPUT BUFFERING ---
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ob_start();
 
-// Pobranie loginu z cookie
-$login = $_COOKIE['user_login'] ?? 'Gość';
+// --- POBRANIE LOGINU Z COOKIE ---
+$login = isset($_COOKIE['user_login']) ? $_COOKIE['user_login'] : 'Gość';
 
-// --- PDO CONNECTION ---
+// --- POŁĄCZENIE Z BAZĄ (Azure MySQL) ---
 $host = "forumchmury.mysql.database.azure.com";
 $dbname = "forum";
 $username = "htmlentities";
@@ -28,10 +32,13 @@ try {
     die("Błąd połączenia: " . $e->getMessage());
 }
 
-// pobieranie listy tematów
-$stmt = $pdo->query("SELECT tid, tname FROM threads ORDER BY tid DESC");
-$rows = $stmt->fetchAll();
-// --- END PHP ---
+// --- POBRANIE LISTY TEMATÓW ---
+try {
+    $stmt = $pdo->query("SELECT tid, tname FROM threads ORDER BY tid DESC");
+    $threads = $stmt->fetchAll();
+} catch (PDOException $e) {
+    die("Błąd pobrania tematów: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -42,25 +49,36 @@ $rows = $stmt->fetchAll();
 <body>
 
 <a href="logout.php">Wyloguj</a><br>
-Zalogowany jako: <?= htmlspecialchars($login) ?><br><br>
+Zalogowany jako: <?php echo htmlspecialchars($login); ?><br><br>
 
-Utwórz temat<br>
+<h3>Utwórz temat</h3>
 <form action="newtopic.php" method="post" enctype="multipart/form-data">
     Temat: <input type="text" name="tname" maxlength="20" size="20"><br>
     Wiadomość: <input type="text" name="message"><br>
     Plik: <input type="file" name="fileToUpload" id="fileToUpload"><br>
-    <input type="submit" value="Utwórz" name="submit" <?php if ($login === 'Gość') echo "disabled"; ?>>
+    <input type="submit" value="Utwórz" name="submit"
+        <?php if ($login === 'Gość') { echo "disabled"; } ?>>
 </form>
 
 <h3>Lista tematów:</h3>
 
-<?php foreach ($rows as $row): ?>
-    <div>
-        <a href="viewtopic.php?tid=<?= htmlspecialchars($row['tid']) ?>">
-            <?= htmlspecialchars($row['tname']) ?: '[Bez nazwy]' ?>
-        </a>
-    </div>
-<?php endforeach; ?>
+<?php
+if (empty($threads)) {
+    echo "<p>Brak tematów w bazie.</p>";
+} else {
+    foreach ($threads as $row) {
+        $tid = htmlspecialchars($row['tid']);
+        $tname = htmlspecialchars($row['tname']);
+        if (strlen($tname) === 0) $tname = '[Bez nazwy]';
+
+        echo '<div><a href="viewtopic.php?tid=' . $tid . '">' . $tname . '</a></div>';
+    }
+}
+?>
 
 </body>
 </html>
+<?php
+// --- WYŁĄCZENIE OUTPUT BUFFERING ---
+ob_end_flush();
+?>
