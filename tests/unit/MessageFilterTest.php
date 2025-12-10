@@ -13,11 +13,12 @@ class MessageFilterTest extends TestCase
     }
 
     public function testFilterMultipleOccurrences(): void
-    {
-        $input = "Cholera cholera!";
-        $expected = "co przeklinasz? co przeklinasz?";
-        $this->assertEquals($expected, filterMessage($input));
-    }
+{
+    $input = "Cholera cholera!";
+    $expected = "co przeklinasz? co przeklinasz?!";
+    $this->assertEquals($expected, filterMessage($input));
+}
+
 
     public function testCaseInsensitive(): void
     {
