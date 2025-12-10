@@ -54,8 +54,10 @@ echo "<pre>";
 var_dump($rows);
 echo "</pre>";
 foreach ($rows as $row) {
-    echo "<a href='viewtopic.php?tid=" . htmlspecialchars($row['tid']) . "'>" 
-         . htmlspecialchars($row['tname']) . "</a><br>";
+    $tid = htmlspecialchars($row['tid']);
+    $tname = htmlspecialchars($row['tname']) ?: '[Bez nazwy]';
+
+    echo "<div><a href=\"viewtopic.php?tid=$tid\">$tname</a></div>";
 }
 ?>
 
