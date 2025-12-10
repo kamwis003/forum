@@ -1,30 +1,11 @@
-<?php declare(strict_types=1); ?>
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-<meta charset="UTF-8">
-<title>Forum</title>
-</head>
-<body>
+<?php declare(strict_types=1);
 
-<?php
+// --- START PHP ---
+
 // Pobranie loginu z cookie
 $login = $_COOKIE['user_login'] ?? 'Gość';
-?>
 
-<a href="logout.php">Wyloguj</a><br>
-Zalogowany jako: <?= htmlspecialchars($login) ?><br><br>
-
-Utwórz temat<br>
-<form action="newtopic.php" method="post" enctype="multipart/form-data">
-    Temat: <input type="text" name="tname" maxlength="20" size="20"><br>
-    Wiadomość: <input type="text" name="message"><br>
-    Plik: <input type="file" name="fileToUpload" id="fileToUpload"><br>
-    <input type="submit" value="Utwórz" name="submit" <?php if ($login === 'Gość') echo "disabled"; ?>>
-</form>
-
-<?php
-// --- PDO CONNECTION (Azure MySQL) ---
+// --- PDO CONNECTION ---
 $host = "forumchmury.mysql.database.azure.com";
 $dbname = "forum";
 $username = "htmlentities";
@@ -39,7 +20,7 @@ try {
         [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::MYSQL_ATTR_SSL_CA            => $ca_cert_path,
+            PDO::MYSQL_ATTR_SSL_CA => $ca_cert_path,
             PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
         ]
     );
@@ -47,19 +28,39 @@ try {
     die("Błąd połączenia: " . $e->getMessage());
 }
 
-// --- Odczyt threads ---
+// pobieranie listy tematów
 $stmt = $pdo->query("SELECT tid, tname FROM threads ORDER BY tid DESC");
 $rows = $stmt->fetchAll();
-echo "<pre>";
-var_dump($rows);
-echo "</pre>";
-foreach ($rows as $row) {
-    $tid = htmlspecialchars($row['tid']);
-    $tname = htmlspecialchars($row['tname']) ?: '[Bez nazwy]';
-
-    echo "<div><a href=\"viewtopic.php?tid=$tid\">$tname</a></div>";
-}
+// --- END PHP ---
 ?>
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Forum</title>
+</head>
+<body>
+
+<a href="logout.php">Wyloguj</a><br>
+Zalogowany jako: <?= htmlspecialchars($login) ?><br><br>
+
+Utwórz temat<br>
+<form action="newtopic.php" method="post" enctype="multipart/form-data">
+    Temat: <input type="text" name="tname" maxlength="20" size="20"><br>
+    Wiadomość: <input type="text" name="message"><br>
+    Plik: <input type="file" name="fileToUpload" id="fileToUpload"><br>
+    <input type="submit" value="Utwórz" name="submit" <?php if ($login === 'Gość') echo "disabled"; ?>>
+</form>
+
+<h3>Lista tematów:</h3>
+
+<?php foreach ($rows as $row): ?>
+    <div>
+        <a href="viewtopic.php?tid=<?= htmlspecialchars($row['tid']) ?>">
+            <?= htmlspecialchars($row['tname']) ?: '[Bez nazwy]' ?>
+        </a>
+    </div>
+<?php endforeach; ?>
 
 </body>
 </html>
