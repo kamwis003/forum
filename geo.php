@@ -43,7 +43,6 @@ $stmt->execute([$ipadress]);
 
 // --- Pobranie wszystkich gości ---
 $tabela = $pdo->query("SELECT * FROM goscieportalu ORDER BY datetime DESC");
-var_dump($stmt->rowCount());
 // --- Dynamiczny link do viewforum.php ---
 $viewforum_path = 'viewforum.php';
 ?>
