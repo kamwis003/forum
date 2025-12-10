@@ -50,6 +50,9 @@ try {
 // --- Odczyt threads ---
 $stmt = $pdo->query("SELECT tid, tname FROM threads ORDER BY tid DESC");
 $rows = $stmt->fetchAll();
+echo "<pre>";
+var_dump($rows);
+echo "</pre>";
 foreach ($rows as $row) {
     echo "<a href='viewtopic.php?tid=" . htmlspecialchars($row['tid']) . "'>" 
          . htmlspecialchars($row['tname']) . "</a><br>";
