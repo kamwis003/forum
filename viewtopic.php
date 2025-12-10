@@ -96,7 +96,7 @@ while ($row = $stmt->fetch()) {
     $type     = $row['ext'];
 
     echo "<tr>";
-    echo "<td>{$row['messageid']}</td>";
+    echo "<td>{$row['mid']}</td>";
     echo "<td>$username</td>";
     echo "<td>$message</td>";
 
