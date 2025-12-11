@@ -27,17 +27,38 @@ class ThreadCreationTest extends TestCase
     }
 
     public function testAddThread()
-    {
-        $name = 'Testowy wątek ' . time();
+{
+    // ---- 1. Utworzenie użytkownika (tak jak realna aplikacja) ----
+    $username = 'testuser_' . time();
+    $password = 'pass';
 
-        $stmt = $this->pdo->prepare("INSERT INTO threads (tname, id) VALUES (?, ?)");
-        $stmt->execute([$name, $this->testUserId]);
+    $stmt = $this->pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+    $stmt->execute([$username, $password]);
 
-        $stmt = $this->pdo->prepare("SELECT tname, id FROM threads WHERE tname = ?");
-        $stmt->execute([$name]);
-        $row = $stmt->fetch();
+    // ---- 2. Pobranie ID użytkownika z bazy (tak jak w newtopic.php) ----
+    $stmt = $this->pdo->prepare("SELECT id FROM users WHERE username = ?");
+    $stmt->execute([$username]);
+    $userRow = $stmt->fetch();
 
-        $this->assertEquals($name, $row['tname']);
-        $this->assertEquals($this->testUserId, $row['id']);
-    }
+    $this->assertNotFalse($userRow, "Nie udało się pobrać użytkownika z bazy");
+
+    $uid = (int)$userRow['id'];
+
+    // ---- 3. Utworzenie wątku ----
+    $name = 'Testowy wątek ' . time();
+
+    $stmt = $this->pdo->prepare("INSERT INTO threads (tname, id) VALUES (?, ?)");
+    $stmt->execute([$name, $uid]);
+
+    // ---- 4. Sprawdzenie czy wątek powstał ----
+    $stmt = $this->pdo->prepare("SELECT tname, id FROM threads WHERE tname = ?");
+    $stmt->execute([$name]);
+    $row = $stmt->fetch();
+
+    $this->assertNotFalse($row, "Nie znaleziono wątku w bazie");
+
+    $this->assertEquals($name, $row['tname']);
+    $this->assertEquals($uid, (int)$row['id']);
+}
+
 }
