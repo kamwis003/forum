@@ -7,6 +7,6 @@ session_destroy();  // zniszczenie sesji
 setcookie("user_login", "", time() - 3600);
 
 // Przekierowanie do strony logowania
-header("Location: https://forumewaldowe.azurewebsites.net/login.php");
+header("Location: https://forumchmurowe.azurewebsites.net/login.php");
 exit; // zatrzymanie dalszego wykonywania skryptu
 ?>
