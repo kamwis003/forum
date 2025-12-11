@@ -29,12 +29,15 @@ class ThreadCreationTest extends TestCase
     public function testAddThread()
     {
         $name = 'Testowy wątek ' . time();
-        $stmt = $this->pdo->prepare("INSERT INTO threads (tname) VALUES (?)");
-        $stmt->execute([$name]);
 
-        $stmt = $this->pdo->prepare("SELECT tname FROM threads WHERE tname = ?");
+        $stmt = $this->pdo->prepare("INSERT INTO threads (tname, id) VALUES (?, ?)");
+        $stmt->execute([$name, $this->testUserId]);
+
+        $stmt = $this->pdo->prepare("SELECT tname, id FROM threads WHERE tname = ?");
         $stmt->execute([$name]);
         $row = $stmt->fetch();
+
         $this->assertEquals($name, $row['tname']);
+        $this->assertEquals($this->testUserId, $row['id']);
     }
 }
