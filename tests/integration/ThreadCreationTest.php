@@ -28,14 +28,13 @@ class ThreadCreationTest extends TestCase
 
     public function testAddThread()
 {
-    // ---- 1. Utworzenie użytkownika (tak jak realna aplikacja) ----
+
     $username = 'testuser_' . time();
     $password = 'pass';
 
     $stmt = $this->pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
     $stmt->execute([$username, $password]);
 
-    // ---- 2. Pobranie ID użytkownika z bazy (tak jak w newtopic.php) ----
     $stmt = $this->pdo->prepare("SELECT id FROM users WHERE username = ?");
     $stmt->execute([$username]);
     $userRow = $stmt->fetch();
@@ -43,14 +42,11 @@ class ThreadCreationTest extends TestCase
     $this->assertNotFalse($userRow, "Nie udało się pobrać użytkownika z bazy");
 
     $uid = (int)$userRow['id'];
-
-    // ---- 3. Utworzenie wątku ----
     $name = 'Testowy wątek ' . time();
 
     $stmt = $this->pdo->prepare("INSERT INTO threads (tname, id) VALUES (?, ?)");
     $stmt->execute([$name, $uid]);
 
-    // ---- 4. Sprawdzenie czy wątek powstał ----
     $stmt = $this->pdo->prepare("SELECT tname, id FROM threads WHERE tname = ?");
     $stmt->execute([$name]);
     $row = $stmt->fetch();
